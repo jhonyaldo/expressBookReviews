@@ -3,15 +3,14 @@ const jwt = require('jsonwebtoken');
 const regd_users = express.Router();
 
 let users = [];
+let books = require('./booksdb.js');  // Asegúrate de importar el archivo de libros
 
 const isValid = (username) => {
-  // Verifica si el username ya existe en el array de usuarios
   const userMatches = users.filter(user => user.username === username);
   return userMatches.length > 0;
 }
 
 const authenticatedUser = (username, password) => {
-  // Verifica si el username y password coinciden con algún usuario registrado
   const userMatches = users.filter(user => user.username === username && user.password === password);
   return userMatches.length > 0;
 }
@@ -51,6 +50,7 @@ regd_users.post("/customer/login", (req, res) => {
   }
 });
 
+// Endpoint para agregar o modificar una reseña de un libro
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const { isbn } = req.params;
   const { review } = req.body;
@@ -69,7 +69,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
 
   books[isbn].reviews[username] = review;
-  return res.status(200).json({ message: "Review added/updated Successfully" });
+  return res.status(200).json({ message: "Review added/updated successfully" });
 });
 
 module.exports.authenticated = regd_users;
