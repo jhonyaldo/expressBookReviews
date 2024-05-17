@@ -41,7 +41,7 @@ public_users.get('/author/:author', function (req, res) {
   return res.status(200).json(result);
 });
 
-// Get all books based on title
+// Get book details based on title
 public_users.get('/title/:title', function (req, res) {
   const { title } = req.params;
   const result = Object.values(books).filter(book => book.title === title);
