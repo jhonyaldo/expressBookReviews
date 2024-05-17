@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const session = require('express-session'); // Asegúrate de importar 'express-session'
 const regd_users = express.Router();
 
 let users = [];
@@ -17,7 +16,7 @@ const authenticatedUser = (username, password) => {
   return userMatches.length > 0;
 }
 
-// Ruta para registrar usuarios
+// Endpoint para registrar un nuevo usuario
 regd_users.post("/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -26,15 +25,15 @@ regd_users.post("/register", (req, res) => {
   }
 
   if (isValid(username)) {
-    return res.status(400).json({ message: "User already exists" });
+    return res.status(400).json({ message: "Username already exists" });
   }
 
   users.push({ username, password });
   return res.status(201).json({ message: "User registered successfully" });
 });
 
-// Ruta para iniciar sesión
-regd_users.post("/login", (req, res) => {
+// Endpoint para iniciar sesión
+regd_users.post("/customer/login", (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -55,11 +54,7 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const { isbn } = req.params;
   const { review } = req.body;
-  const username = req.session.authorization ? req.session.authorization.username : null;
-
-  if (!username) {
-    return res.status(401).json({ message: "User not authenticated" });
-  }
+  const username = req.session.authorization.username;
 
   if (!books[isbn]) {
     return res.status(404).json({ message: "Book not found" });
@@ -74,7 +69,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
 
   books[isbn].reviews[username] = review;
-  return res.status(200).json({ message: "Review added/updated successfully" });
+  return res.status(200).json({ message: "Review added/updated Successfully" });
 });
 
 module.exports.authenticated = regd_users;
